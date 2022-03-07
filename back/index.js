@@ -10,10 +10,40 @@ app.get("/", (req, res) => {
   res.json("working...");
 });
 
-app.get("/data", (req, res) => {
+app.get("/data-serbia", (req, res) => {
   const options = {
     method: "GET",
     url: `https://ghoapi.azureedge.net/api/BP_04?$filter=SpatialDim%20eq%20%27SRB%27`,
+  };
+  axios
+    .request(options)
+    .then((response) => {
+      console.log(response.data);
+      res.json(response.data);
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+});
+app.get("/data-hungary", (req, res) => {
+  const options = {
+    method: "GET",
+    url: `https://ghoapi.azureedge.net/api/BP_04?$filter=SpatialDim%20eq%20%27HUN%27`,
+  };
+  axios
+    .request(options)
+    .then((response) => {
+      console.log(response.data);
+      res.json(response.data);
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+});
+app.get("/data-uk", (req, res) => {
+  const options = {
+    method: "GET",
+    url: `https://ghoapi.azureedge.net/api/BP_04?$filter=SpatialDim%20eq%20%27GBR%27`,
   };
   axios
     .request(options)
