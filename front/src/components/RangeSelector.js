@@ -1,16 +1,27 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Range, getTrackBackground } from "react-range";
+import InputEmmiter from "../services/InputEmmiter";
 
 const RangeSelector = () => {
-  const [values, setValues] = useState([13, 78]);
+  const [values, setValues] = useState([]);
+  const [minMax, setMinMax] = useState([]);
+
+  useEffect(() => {
+    const subscription = InputEmmiter.rangeMinMaxValues.subscribe((array) => {
+      setMinMax(array);
+      setValues(array);
+    });
+    return () => subscription.unsubscribe();
+  }, []);
   return (
     <Range
       values={values}
       step={1}
-      min={1}
-      max={100}
+      min={minMax[0]}
+      max={minMax[1]}
       onChange={(values) => {
         setValues(values);
+        InputEmmiter.rangeEmmiter.next(values);
       }}
       renderTrack={({ props, children }) => (
         <div
@@ -42,7 +53,7 @@ const RangeSelector = () => {
           </div>
         </div>
       )}
-      renderThumb={({ props, isDragged }) => (
+      renderThumb={({ index, props, isDragged }) => (
         <div
           {...props}
           style={{
@@ -59,9 +70,24 @@ const RangeSelector = () => {
         >
           <div
             style={{
+              position: "absolute",
+              top: "-28px",
+              color: "#fff",
+              fontWeight: "bold",
+              fontSize: "14px",
+              fontFamily: "Arial,Helvetica Neue,Helvetica,sans-serif",
+              padding: "4px",
+              borderRadius: "4px",
+              backgroundColor: "#548BF4",
+            }}
+          >
+            {parseFloat(values[index]?.toFixed(1))}
+          </div>
+          <div
+            style={{
               height: "16px",
               width: "5px",
-              backgroundColor: isDragged ? "red" : "yellow",
+              backgroundColor: isDragged ? "blue" : "yellow",
             }}
           ></div>
         </div>

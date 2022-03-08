@@ -1,8 +1,6 @@
-import { useState, useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import UKDataData from "./components/UnitedKingdom";
-import HungaryData from "./components/Hungary";
-import SerbiaData from "./components/Serbia";
+
+import DataVisulization from "./components/DataVisualization";
 import Nav from "./components/Nav";
 import RangeSelector from "./components/RangeSelector";
 
@@ -13,9 +11,12 @@ const App = () => {
       <Nav></Nav>
       <RangeSelector></RangeSelector>
       <Routes>
-        <Route path="/" element={<SerbiaData />}></Route>
-        <Route path="/uk" element={<UKDataData />}></Route>
-        <Route path="/hungary" element={<HungaryData />}></Route>
+        <Route path="/" element={<DataVisulization param={"serbia"} />}></Route>
+        <Route path="/uk" element={<DataVisulization param={"uk"} />}></Route>
+        <Route
+          path="/hungary"
+          element={<DataVisulization param={"hungary"} />}
+        ></Route>
       </Routes>
       <footer>Milanche_74</footer>
     </BrowserRouter>

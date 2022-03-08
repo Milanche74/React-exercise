@@ -1,5 +1,5 @@
-const getSerbiaData = async () => {
-  const response = await fetch(`http://localhost:7000/data-serbia`, {
+const getData = async (param) => {
+  const response = await fetch(`http://localhost:7000/data-${param}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -18,5 +18,5 @@ const getSerbiaData = async () => {
 };
 
 export default {
-  getSerbiaData,
+  getData,
 };
