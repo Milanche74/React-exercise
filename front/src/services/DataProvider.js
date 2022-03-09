@@ -10,7 +10,7 @@ const getData = async (param) => {
     ({ NumericValue, Dim1, TimeDimensionValue }) => ({
       Dim1,
       NumericValue,
-      TimeDimensionValue,
+      TimeDimensionValue: parseInt(TimeDimensionValue),
     })
   );
 

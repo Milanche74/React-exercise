@@ -5,16 +5,14 @@ import DataProvider from "../services/DataProvider";
 import InputEmmiter from "../services/InputEmmiter";
 
 const buttons = [
-  { value: "Female", key: "FMLE" },
-  { value: "Male", key: "MLE" },
-  { value: "Both Genders", key: "BTSX" },
-  { value: "Compare", key: "CMP" },
+  { value: "Female", key: "FMLE", active: true },
+  { value: "Male", key: "MLE", active: true },
+  { value: "Median", key: "BTSX", active: true },
+  { value: "Compare", key: "CMP", active: false },
 ];
 
 const formatRangeValues = (data) => {
-  const valuesArray = data.map(({ TimeDimensionValue }) =>
-    parseInt(TimeDimensionValue)
-  );
+  const valuesArray = data.map(({ TimeDimensionValue }) => TimeDimensionValue);
   InputEmmiter.rangeMinMaxValues.next([
     Math.min(...valuesArray),
     Math.max(...valuesArray),
@@ -27,7 +25,7 @@ const dataFilter = (key, data) => {
   series = data
     ?.filter(({ Dim1 }) => Dim1 === key)
     .map(({ TimeDimensionValue, NumericValue }) => [
-      parseInt(TimeDimensionValue),
+      TimeDimensionValue,
       NumericValue,
     ])
     .sort((a, b) => {
@@ -43,16 +41,23 @@ const getMinYAxisValue = (data) => {
     extractedValues.push(arr[1]);
   });
 
-  return Math.ceil(Math.min(...extractedValues));
+  return Math.floor(Math.min(...extractedValues));
 };
 
-const singleDataChartOptions = (gender, data) => {
-  let options = {
-    title: { text: "Blood Pressure index for population" },
-  };
-  const series = dataFilter(gender.key, data);
+const lineChartOptions = (buttons, data) => {
+  let series = [];
+  let options;
+  buttons.forEach((btn) => {
+    if (btn.active) {
+      series.push({
+        name: btn.value,
+        data: dataFilter(btn.key, data),
+      });
+    }
+  });
+
   options = {
-    ...options,
+    title: { text: "Blood Pressure index for population" },
     yAxis: {
       min: null,
       max: null,
@@ -63,11 +68,11 @@ const singleDataChartOptions = (gender, data) => {
         step: 1,
       },
       accessibility: {
-        description: `Blood pressure index ${gender.value}`,
+        description: `Blood pressure index for chosen categories`,
       },
     },
     chart: { type: "line" },
-    series: { name: gender.value, data: series },
+    series: series,
   };
   return options;
 };
@@ -169,10 +174,25 @@ const comparisonChartOptions = (data) => {
 const DataVisulization = ({ param }) => {
   const [data, setData] = useState([]);
   const [chartOptions, setChartOptions] = useState({});
+  const [rangeValues, setRangeValues] = useState([]);
 
   const optionSetter = (button) => {
+    let options;
+    let i = buttons.indexOf(button);
+    buttons[i].active = !buttons[i].active;
     if (button.key !== "CMP") {
-      const options = singleDataChartOptions(button, data);
+      if (rangeValues.length > 0) {
+        let dataFilter1 = data?.filter(
+          (obj) => obj.TimeDimensionValue > rangeValues[0]
+        );
+        const dataFilter2 = dataFilter1?.filter(
+          (obj) => obj.TimeDimensionValue < rangeValues[1]
+        );
+
+        options = lineChartOptions(buttons, dataFilter2);
+      } else {
+        lineChartOptions(buttons, data);
+      }
       setChartOptions(options);
     } else {
       const options = comparisonChartOptions(data);
@@ -184,27 +204,33 @@ const DataVisulization = ({ param }) => {
     const getData = async () => {
       const data = await DataProvider.getData(param);
       setData(data);
-      // set chart options for initial render
-      const options = singleDataChartOptions(buttons[0], data);
-      setChartOptions(options);
       formatRangeValues(data);
     };
+
     getData();
   }, [param]);
 
   useEffect(() => {
-    let filteredData;
     const subscription = InputEmmiter.rangeEmmiter.subscribe((values) => {
-      filteredData = data.filter(
-        ({ TimeDimensionValue }) =>
-          parseInt(TimeDimensionValue) > values[0] ||
-          parseInt(TimeDimensionValue) < values[1]
-      );
-      console.log(filteredData);
+      let options;
+      setRangeValues(values);
+      if (values.length > 0) {
+        let dataFilter1 = data?.filter(
+          (obj) => obj.TimeDimensionValue > values[0]
+        );
+        const dataFilter2 = dataFilter1?.filter(
+          (obj) => obj.TimeDimensionValue < values[1]
+        );
+
+        // setData(dataRange);
+        options = lineChartOptions(buttons, dataFilter2);
+      } else {
+        options = lineChartOptions(buttons, data);
+      }
+      setChartOptions(options);
     });
-    setData(filteredData);
     return () => subscription.unsubscribe();
-  }, []);
+  }, [data]);
 
   return (
     <div>
