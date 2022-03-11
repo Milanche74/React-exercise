@@ -1,4 +1,4 @@
-const getData = async (param) => {
+const provideData = async (param) => {
   const response = await fetch(`http://localhost:7000/data-${param}`, {
     method: "GET",
     headers: {
@@ -17,6 +17,4 @@ const getData = async (param) => {
   return data;
 };
 
-export default {
-  getData,
-};
+export default provideData;

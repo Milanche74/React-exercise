@@ -1,29 +1,31 @@
 import { useEffect, useState } from "react";
 import { Range, getTrackBackground } from "react-range";
-import InputEmmiter from "../services/InputEmmiter";
+import subjects from "../services/InputEmmiter";
 
 const RangeSelector = () => {
   const [values, setValues] = useState([]);
   const [minMax, setMinMax] = useState([]);
 
   useEffect(() => {
-    const subscription = InputEmmiter.rangeMinMaxValues.subscribe((array) => {
+    const subscription = subjects.rangeMinMaxValues.subscribe((array) => {
       setMinMax(array);
       setValues(array);
     });
     return () => subscription.unsubscribe();
   }, []);
+
   return (
-    <div>
+    <div className="range-container">
       {values.length > 0 ? (
         <Range
           values={values}
-          step={1}
+          // it is advised for range component to calculate steps by itself for performance reasons
+          step={(minMax[1] - minMax[0]) / (minMax[1] - minMax[0])}
           min={minMax[0]}
           max={minMax[1]}
           onChange={(values) => {
             setValues(values);
-            InputEmmiter.rangeEmmiter.next(values);
+            subjects.rangeEmmiter.next(values);
           }}
           renderTrack={({ props, children }) => (
             <div
@@ -31,24 +33,32 @@ const RangeSelector = () => {
               onTouchStart={props.onTouchStart}
               style={{
                 ...props.style,
-                height: "24px",
+                position: "relative",
+                height: "30px",
                 display: "flex",
                 width: "100%",
+                backgroundColor: "#f0f0f0",
+                boxShadow: "10px 10px 15px #adadad, -10px -10px 6px #ffffff",
+                borderRadius: "4px",
               }}
             >
               <div
                 ref={props.ref}
+                className="range-track"
                 style={{
-                  height: "5px",
-                  width: "100%",
+                  height: "18px",
+                  position: "relative",
+                  width: "98%",
+                  left: "1%",
                   borderRadius: "4px",
                   background: getTrackBackground({
                     values,
-                    colors: ["#ccc", "#548BF4", "#ccc"],
+                    colors: ["#ccc", "hsl(240, 100%, 50%)", "#ccc"],
                     min: minMax[0],
                     max: minMax[1],
                   }),
                   alignSelf: "center",
+                  cursor: "pointer",
                 }}
               >
                 {children}
@@ -60,14 +70,18 @@ const RangeSelector = () => {
               {...props}
               style={{
                 ...props.style,
-                height: "42px",
-                width: "42px",
-                borderRadius: "4px",
+                height: "48px",
+                width: "48px",
+                borderRadius: "100%",
                 backgroundColor: "#FFF",
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
-                boxShadow: "0px 2px 6px #AAA",
+                border: "3px solid #ffffff",
+                boxShadow: "3px 5px 8px #9f9f9f",
+                zIndex: 5,
+                background: "linear-gradient(145deg, #ffffff, #bcbcbc)",
+                cursor: "pointer",
               }}
             >
               <div
@@ -89,7 +103,7 @@ const RangeSelector = () => {
                 style={{
                   height: "16px",
                   width: "5px",
-                  backgroundColor: isDragged ? "blue" : "yellow",
+                  backgroundColor: isDragged ? "blue" : "gray",
                 }}
               ></div>
             </div>
