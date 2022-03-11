@@ -1,0 +1,199 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100vh;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  gap: 5vh;
+  background-color: #f0f0f0;
+}
+
+#root > * {
+  padding: 0 5vw;
+}
+
+#root .header {
+  font-size: 48px;
+  text-align: center;
+  background: linear-gradient(
+    145deg,
+    rgba(34, 55, 55, 1) 0%,
+    rgba(47, 79, 79, 1) 35%,
+    rgba(80, 133, 133, 1) 100%
+  );
+  color: white;
+  padding-block: 1vh;
+  text-shadow: 0 0 3px #000000;
+}
+
+.nav-container {
+  display: flex;
+  padding: 0 5vw;
+  justify-content: space-between;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  text-decoration: none;
+  text-align: center;
+  font-size: 30px;
+  font-weight: bold;
+  width: 10vw;
+  aspect-ratio: 4/3;
+  border-radius: 10px;
+  box-shadow: 7px 7px 7px 3px rgb(151, 151, 151);
+  transition: all 0.2s ease-in;
+}
+
+.nav-link.link-active::after {
+  display: none;
+  transition: all 0.5s ease;
+}
+
+.nav-link.link-active .link-text {
+  display: none;
+}
+
+.nav-link:nth-of-type(1) {
+  background-image: url("../public/serbia-flag.svg.png");
+}
+.nav-link:nth-of-type(2) {
+  background-image: url("../public/uk-flag.png");
+}
+.nav-link:nth-of-type(3) {
+  background-image: url("../public/hungary-flag.png");
+}
+
+.img-background {
+  background-size: cover;
+  background-position: center;
+}
+
+.nav-link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 10px;
+  background-color: rgb(255, 255, 255, 0.4);
+  background-size: cover;
+  z-index: 2;
+  border-top: 2px solid rgba(255, 255, 255, 0.493);
+  border-left: 2px solid rgba(255, 255, 255, 0.493);
+  backdrop-filter: blur(4px);
+  transition: all 0.2s ease-in;
+}
+
+.nav-link:hover::after {
+  backdrop-filter: blur(1px);
+  transition: all 0.2s ease-in;
+}
+
+.nav-link .link-text {
+  color: #000000;
+  z-index: 5;
+  text-shadow: 0 0 4px #ffffff;
+}
+
+.nav-link:hover .link-text {
+  color: #000000;
+  z-index: 5;
+  text-shadow: 0 0 8px #ffffff;
+}
+
+.nav-link:hover {
+  box-shadow: 10px 10px 10px 3px rgb(151, 151, 151);
+  transition: all 0.2s ease-in;
+}
+
+.range-container {
+  margin-top: 5vh;
+}
+
+.range-track::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.2),
+    rgba(255, 255, 255, 0.6)
+  );
+  border-radius: 4px;
+}
+
+.graph-container > * {
+  margin-bottom: 5vh;
+}
+
+.graph-header {
+  font-size: 36px;
+  text-align: center;
+}
+
+.buttons {
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  width: min-content;
+  justify-content: center;
+  gap: 2vw;
+  padding: 2vh 2vw;
+  border-radius: 10px;
+  box-shadow: 15px 15px 20px #adadad, -15px -15px 20px #ffffff;
+}
+
+.buttons > * {
+  font-size: 18px;
+  color: white;
+  text-shadow: 0 0 2px #000000;
+  font-weight: bolder;
+  padding: 1vh 1vw;
+  border: 5px solid rgb(47, 79, 79);
+  border-radius: 8px;
+  cursor: pointer;
+  background: linear-gradient(
+    145deg,
+    rgba(34, 55, 55, 1) 0%,
+    rgba(47, 79, 79, 1) 35%,
+    rgba(80, 133, 133, 1) 100%
+  );
+  box-shadow: 5px 5px 5px 2px rgb(46, 46, 46), -5px -5px 5px 2px #ffffff;
+  transition: all 0.3s ease-in;
+}
+
+.button-active {
+  background-color: rgb(47, 79, 79);
+  box-shadow: none;
+  transition: all 0.3s ease-in;
+}
+
+.graph-container > *:nth-last-child(1) {
+  outline: 2px solid #f0f0f0;
+  border-radius: 10px;
+  box-shadow: 15px 15px 20px #adadad, -15px -15px 20px #ffffff;
+}
+
+#root .footer {
+  margin-top: auto;
+  color: white;
+  text-align: center;
+  padding: 2vh 0;
+  background: linear-gradient(
+    145deg,
+    rgba(34, 55, 55, 1) 0%,
+    rgba(47, 79, 79, 1) 35%,
+    rgba(80, 133, 133, 1) 100%
+  );
+}
