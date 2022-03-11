@@ -115,4 +115,5 @@ const RangeSelector = () => {
     </div>
   );
 };
+
 export default RangeSelector;

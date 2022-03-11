@@ -45,6 +45,7 @@ const getMinYAxisValue = (data) => {
 
   return Math.floor(Math.min(...extractedValues));
 };
+
 const getChartOptions = (buttons, data) => {
   let options;
   if (buttons[buttons.length - 1].active) {
@@ -112,7 +113,6 @@ const comparisonChartOptions = (data) => {
   maleSeries.forEach((s) => {
     s[1] = s[1] * -1;
   });
-
   const yAxisMinValue = getMinYAxisValue(maleSeries);
   const yAxisMaxValue = yAxisMinValue * -1;
 
@@ -196,6 +196,7 @@ const comparisonChartOptions = (data) => {
       },
     ],
   };
+
   return options;
 };
 
@@ -216,6 +217,7 @@ const DataVisulization = ({ param }) => {
       let i = buttons.indexOf(button);
       buttons[i].active = !buttons[i].active;
       buttons[buttons.length - 1].active = false;
+
       options = lineChartOptions(buttons, filteredData);
       setChartOptions(options);
     } else {
@@ -227,6 +229,7 @@ const DataVisulization = ({ param }) => {
             btn.active = false;
           }
         });
+
         options = lineChartOptions(buttons, filteredData);
         setChartOptions(options);
       } else {
@@ -237,7 +240,8 @@ const DataVisulization = ({ param }) => {
             btn.active = true;
           }
         });
-        const options = comparisonChartOptions(filteredData);
+
+        options = comparisonChartOptions(filteredData);
         setChartOptions(options);
       }
     }
@@ -256,14 +260,17 @@ const DataVisulization = ({ param }) => {
               obj.TimeDimensionValue >= values[0] &&
               obj.TimeDimensionValue <= values[1]
           );
+
           options = getChartOptions(buttons, filteredData);
           setChartOptions(options);
         } else {
           let initialRangeValues = formatRangeValues(data);
+
           setRangeValues(initialRangeValues);
           setChartOptions(getChartOptions(buttons, data));
         }
       });
+
       return () => subscription.unsubscribe();
     };
 
